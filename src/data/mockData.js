@@ -658,3 +658,155 @@ export const shiftSummary = {
 export function formatIDR(n) {
   return "Rp " + n.toLocaleString("id-ID");
 }
+
+// --- Accounting / Finance module -------------------------------------------
+//
+// Costing method: weighted-average cost per branch-SKU, not FEFO-actual-batch
+// cost. The same SKU is routinely received at different purchase prices over
+// time, so every branch-SKU carries one blended cost that's recalculated on
+// each receipt: newAvg = (oldQty*oldAvg + recvQty*recvCost) / (oldQty+recvQty).
+// Physical stock still rotates FEFO for expiry purposes — averaging only
+// changes how COGS is valued, not which batch gets picked at the counter.
+export const costReceipts = {
+  "PCM-500-10": [
+    { batch: "PCM24-091", qty: 4000, unitCost: 4200, date: "2026-06-02" },
+    { batch: "PCM24-118", qty: 6000, unitCost: 4550, date: "2026-08-14" },
+  ],
+  "AMX-500-CAP": [
+    { batch: "AMX24-050", qty: 1500, unitCost: 11800, date: "2026-05-20" },
+    { batch: "AMX24-076", qty: 2000, unitCost: 12600, date: "2026-08-30" },
+  ],
+  "ORS-SACH": [{ batch: "ORS23-054", qty: 3000, unitCost: 1450, date: "2026-04-10" }],
+  "CTZ-10-TAB": [
+    { batch: "CTZ24-020", qty: 1000, unitCost: 6100, date: "2026-05-05" },
+    { batch: "CTZ24-041", qty: 1200, unitCost: 6450, date: "2026-08-01" },
+  ],
+  "AMOXCLAV-625": [
+    { batch: "AMC23-070", qty: 400, unitCost: 24800, date: "2026-03-15" },
+    { batch: "AMC24-009", qty: 500, unitCost: 26200, date: "2026-08-20" },
+  ],
+  "IBU-400-TAB": [
+    { batch: "IBU24-090", qty: 2500, unitCost: 5100, date: "2026-05-18" },
+    { batch: "IBU24-133", qty: 3000, unitCost: 5350, date: "2026-08-25" },
+  ],
+  "SALB-INH": [{ batch: "SLB24-021", qty: 300, unitCost: 32000, date: "2026-07-01" }],
+};
+
+export function getAverageCost(sku) {
+  const receipts = costReceipts[sku] || [];
+  const totalQty = receipts.reduce((sum, r) => sum + r.qty, 0);
+  const totalCost = receipts.reduce((sum, r) => sum + r.qty * r.unitCost, 0);
+  return totalQty ? totalCost / totalQty : 0;
+}
+
+export function getInventoryValuation(branchId) {
+  return getStockForBranch(branchId).map((row) => {
+    const avgCost = getAverageCost(row.sku);
+    return { ...row, avgCost, value: Math.round(avgCost * row.onHand), receipts: costReceipts[row.sku] || [] };
+  });
+}
+
+export const plByBranch = {
+  "BR-01": { revenue: 128500000, cogs: 79800000, opex: 18200000, cashSales: 51200000, cardSales: 77300000 },
+  "BR-02": { revenue: 96200000, cogs: 60100000, opex: 15400000, cashSales: 40500000, cardSales: 55700000 },
+  "BR-03": { revenue: 142700000, cogs: 88300000, opex: 19600000, cashSales: 58900000, cardSales: 83800000 },
+  "BR-04": { revenue: 84300000, cogs: 52900000, opex: 13100000, cashSales: 33700000, cardSales: 50600000 },
+};
+
+// MAIN represents the consolidated (single legal entity) view across branches.
+export function getPL(branchId) {
+  if (branchId !== "MAIN") return plByBranch[branchId];
+  return Object.values(plByBranch).reduce(
+    (acc, b) => ({
+      revenue: acc.revenue + b.revenue,
+      cogs: acc.cogs + b.cogs,
+      opex: acc.opex + b.opex,
+      cashSales: acc.cashSales + b.cashSales,
+      cardSales: acc.cardSales + b.cardSales,
+    }),
+    { revenue: 0, cogs: 0, opex: 0, cashSales: 0, cardSales: 0 }
+  );
+}
+
+export const payables = [
+  {
+    id: "INV-3301",
+    supplier: "PT Kimia Farma Trading",
+    invoiceNo: "KFT/2026/0917",
+    amount: 42500000,
+    terms: "Net 30",
+    dueDate: "2026-10-05",
+    status: "outstanding",
+  },
+  {
+    id: "INV-3298",
+    supplier: "PT Enseval Putera Megatrading",
+    invoiceNo: "EPM/2026/0902",
+    amount: 28750000,
+    terms: "Net 45",
+    dueDate: "2026-10-14",
+    status: "outstanding",
+  },
+  {
+    id: "INV-3290",
+    supplier: "PT Anugrah Pharmindo Lestari",
+    invoiceNo: "APL/2026/0888",
+    amount: 15200000,
+    terms: "Net 30",
+    dueDate: "2026-09-18",
+    status: "overdue",
+  },
+  {
+    id: "INV-3275",
+    supplier: "PT Kimia Farma Trading",
+    invoiceNo: "KFT/2026/0850",
+    amount: 33900000,
+    terms: "Net 30",
+    dueDate: "2026-09-10",
+    status: "paid",
+  },
+];
+
+export const writeOffs = [
+  {
+    id: "WO-2041",
+    branch: "BR-01",
+    sku: "AMOXCLAV-625",
+    name: "Amoxicillin-Clavulanate 625mg",
+    qty: 12,
+    reason: "Kedaluwarsa",
+    date: "2026-09-15",
+    approvedBy: "I Made Ardika",
+  },
+  {
+    id: "WO-2039",
+    branch: "BR-03",
+    sku: "SALB-INH",
+    name: "Salbutamol Inhaler 100mcg",
+    qty: 3,
+    reason: "Rusak saat penyimpanan",
+    date: "2026-09-11",
+    approvedBy: "Ni Luh Sari",
+  },
+  {
+    id: "WO-2035",
+    branch: "BR-02",
+    sku: "CTZ-10-TAB",
+    name: "Cetirizine 10mg",
+    qty: 25,
+    reason: "Kedaluwarsa",
+    date: "2026-09-04",
+    approvedBy: "I Made Ardika",
+  },
+].map((w) => ({ ...w, costImpact: Math.round(w.qty * getAverageCost(w.sku)) }));
+
+// MAIN sees every branch's write-offs; a branch only sees its own.
+export function getWriteOffsForBranch(branchId) {
+  if (branchId === "MAIN") return writeOffs;
+  return writeOffs.filter((w) => w.branch === branchId);
+}
+
+// MAIN oversees payables company-wide; branches don't hold their own AP.
+export function getPayablesForBranch(branchId) {
+  return branchId === "MAIN" ? payables : [];
+}

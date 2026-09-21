@@ -5,6 +5,7 @@ import Dashboard from "./pages/backoffice/Dashboard.jsx";
 import Transfers from "./pages/backoffice/Transfers.jsx";
 import Replenishment from "./pages/backoffice/Replenishment.jsx";
 import Forecasting from "./pages/backoffice/Forecasting.jsx";
+import Finance from "./pages/backoffice/Finance.jsx";
 import PosLayout from "./layouts/PosLayout.jsx";
 import Sale from "./pages/pos/Sale.jsx";
 import ShiftClose from "./pages/pos/ShiftClose.jsx";
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="transfers" element={<Transfers />} />
           <Route path="replenishment" element={<Replenishment />} />
           <Route path="forecasting" element={<Forecasting />} />
+          <Route path="finance" element={<Finance />} />
         </Route>
 
         <Route path="/pos" element={<PosLayout />}>

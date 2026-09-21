@@ -7,6 +7,7 @@ const nav = [
   { to: "/backoffice/transfers", label: "Transfer" },
   { to: "/backoffice/replenishment", label: "Pengisian ulang" },
   { to: "/backoffice/forecasting", label: "Fast moving" },
+  { to: "/backoffice/finance", label: "Keuangan" },
 ];
 
 export default function Sidebar() {

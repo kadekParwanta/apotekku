@@ -8,6 +8,9 @@ const styles = {
   dispatched: "bg-amber-light text-amber border-amber/30",
   delivered: "bg-pine-light/10 text-pine-dark border-pine-light/30",
   "pending-approval": "bg-brick-light text-brick border-brick/30",
+  outstanding: "bg-amber-light text-amber border-amber/30",
+  overdue: "bg-brick-light text-brick border-brick/30",
+  paid: "bg-pine-light/10 text-pine-dark border-pine-light/30",
 };
 
 const labels = {
@@ -20,6 +23,9 @@ const labels = {
   dispatched: "Dikirim",
   delivered: "Terkirim",
   "pending-approval": "Menunggu persetujuan",
+  outstanding: "Belum dibayar",
+  overdue: "Jatuh tempo",
+  paid: "Lunas",
 };
 
 export default function Badge({ status, children }) {
