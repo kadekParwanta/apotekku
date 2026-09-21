@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { branches, getStockForBranch } from "../../data/mockData.js";
 import Badge from "../../components/Badge.jsx";
 import { useBranch } from "../../context/BranchContext.jsx";
@@ -27,6 +28,7 @@ function StatCard({ label, value, sub, tone }) {
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { branchId } = useBranch();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -113,10 +115,14 @@ export default function Dashboard() {
           </thead>
           <tbody>
             {filteredStock.map((row) => (
-              <tr key={row.sku} className="border-b border-line last:border-0 hover:bg-line/20">
+              <tr
+                key={row.sku}
+                onClick={() => navigate(`/backoffice/stock/${row.sku}`)}
+                className="cursor-pointer border-b border-line last:border-0 hover:bg-line/20"
+              >
                 <td className="px-4 py-3 font-mono text-xs text-muted">{row.sku}</td>
                 <td className="px-4 py-3">
-                  <div className="text-ink">{row.name}</div>
+                  <div className="text-ink hover:text-pine hover:underline">{row.name}</div>
                   <div className="text-xs text-muted">
                     {row.form}
                     {row.rx && <span className="ml-1.5 text-brick">Rx</span>}

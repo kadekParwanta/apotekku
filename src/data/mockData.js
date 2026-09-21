@@ -810,3 +810,100 @@ export function getWriteOffsForBranch(branchId) {
 export function getPayablesForBranch(branchId) {
   return branchId === "MAIN" ? payables : [];
 }
+
+// --- Stock movement log (stock detail page) --------------------------------
+//
+// There's no persisted transaction ledger in this mock app, so the event log
+// on the stock detail page is generated deterministically from a seed derived
+// from branch+SKU: same branch/SKU always reproduces the same history, but it
+// varies across branches and items instead of repeating one canned list.
+// Events are walked backward from "today" and the running balance is derived
+// from the branch's current on-hand qty, so the newest row always reconciles
+// with what Dashboard shows.
+export const movementTypes = [
+  { value: "receipt", label: "Penerimaan", sign: 1 },
+  { value: "sale", label: "Penjualan", sign: -1 },
+  { value: "transfer-in", label: "Transfer masuk", sign: 1 },
+  { value: "transfer-out", label: "Transfer keluar", sign: -1 },
+  { value: "adjustment", label: "Penyesuaian", sign: 0 },
+  { value: "write-off", label: "Write-off", sign: -1 },
+];
+
+function seededRandom(seed) {
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return function next() {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) | 0;
+  return Math.abs(hash) || 1;
+}
+
+const MOVEMENT_LOG_ANCHOR = "2026-09-19";
+
+export function getStockMovements(sku, branchId) {
+  const stock = getStockForBranch(branchId).find((s) => s.sku === sku);
+  if (!stock) return [];
+
+  const rand = seededRandom(hashString(`${branchId}-${sku}`));
+  const receipts = costReceipts[sku] || [];
+  const eventCount = 12 + Math.floor(rand() * 8);
+  const events = [];
+  let balance = stock.onHand;
+  let daysAgo = Math.floor(rand() * 2);
+
+  for (let i = 0; i < eventCount; i++) {
+    const date = new Date(MOVEMENT_LOG_ANCHOR);
+    date.setDate(date.getDate() - daysAgo);
+
+    const r = rand();
+    let type, qty, reference, note;
+    if (r < 0.45) {
+      type = "sale";
+      qty = -(1 + Math.floor(rand() * 8));
+      reference = `POS-${1000 + Math.floor(rand() * 9000)}`;
+      note = "Penjualan counter";
+    } else if (r < 0.65) {
+      type = "receipt";
+      qty = 20 + Math.floor(rand() * 80);
+      reference = receipts.length ? receipts[Math.floor(rand() * receipts.length)].batch : "-";
+      note = "Penerimaan dari pemasok";
+    } else if (r < 0.8) {
+      type = branchId === "MAIN" ? "transfer-out" : "transfer-in";
+      qty = type === "transfer-out" ? -(10 + Math.floor(rand() * 40)) : 10 + Math.floor(rand() * 40);
+      reference = `TRF-${2000 + Math.floor(rand() * 200)}`;
+      note = type === "transfer-out" ? "Dikirim ke cabang" : "Diterima dari Gudang Utama";
+    } else if (r < 0.92) {
+      type = "adjustment";
+      qty = Math.floor(rand() * 11) - 5;
+      if (qty === 0) qty = 1;
+      reference = "-";
+      note = qty > 0 ? "Penyesuaian stok opname (lebih)" : "Penyesuaian stok opname (kurang)";
+    } else {
+      type = "write-off";
+      qty = -(1 + Math.floor(rand() * 6));
+      reference = `WO-${2000 + Math.floor(rand() * 100)}`;
+      note = rand() < 0.5 ? "Kedaluwarsa" : "Rusak saat penyimpanan";
+    }
+
+    events.push({
+      id: `${sku}-${branchId}-${i}`,
+      date: date.toISOString().slice(0, 10),
+      type,
+      qty,
+      balanceAfter: balance,
+      reference,
+      note,
+    });
+
+    balance -= qty;
+    daysAgo += 1 + Math.floor(rand() * 3);
+  }
+
+  return events.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+}

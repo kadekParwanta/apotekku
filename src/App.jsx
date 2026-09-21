@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing.jsx";
 import BackOfficeLayout from "./layouts/BackOfficeLayout.jsx";
 import Dashboard from "./pages/backoffice/Dashboard.jsx";
+import StockDetail from "./pages/backoffice/StockDetail.jsx";
 import Transfers from "./pages/backoffice/Transfers.jsx";
 import Replenishment from "./pages/backoffice/Replenishment.jsx";
 import Forecasting from "./pages/backoffice/Forecasting.jsx";
@@ -19,6 +20,7 @@ export default function App() {
 
         <Route path="/backoffice" element={<BackOfficeLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="stock/:sku" element={<StockDetail />} />
           <Route path="transfers" element={<Transfers />} />
           <Route path="replenishment" element={<Replenishment />} />
           <Route path="forecasting" element={<Forecasting />} />
