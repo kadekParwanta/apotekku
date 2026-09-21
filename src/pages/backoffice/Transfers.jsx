@@ -1,17 +1,26 @@
-import { transfers, branches } from "../../data/mockData.js";
+import { branches, getTransfersForBranch } from "../../data/mockData.js";
 import Badge from "../../components/Badge.jsx";
+import { useBranch } from "../../context/BranchContext.jsx";
 
 function branchName(id) {
   return branches.find((b) => b.id === id)?.name || id;
 }
 
 export default function Transfers() {
+  const { branchId } = useBranch();
+  const transfers = getTransfersForBranch(branchId);
+  const isMain = branchId === "MAIN";
+
   return (
     <div>
       <header className="mb-6 flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-ink">Transfer</h1>
-          <p className="mt-1 text-sm text-muted">Pergerakan Gudang Utama \u2192 cabang, diurutkan berdasarkan aktivitas terakhir</p>
+          <p className="mt-1 text-sm text-muted">
+            {isMain
+              ? "Semua pergerakan Gudang Utama \u2192 cabang, diurutkan berdasarkan aktivitas terakhir"
+              : `Pergerakan ke/dari ${branchName(branchId)}, diurutkan berdasarkan aktivitas terakhir`}
+          </p>
         </div>
         <button className="border border-pine bg-pine px-4 py-2 text-sm font-medium text-white hover:bg-pine-dark">
           Transfer baru
@@ -55,14 +64,23 @@ export default function Transfers() {
                 </td>
               </tr>
             ))}
+            {transfers.length === 0 && (
+              <tr>
+                <td colSpan={8} className="px-4 py-8 text-center text-sm text-muted">
+                  Belum ada transfer untuk cabang ini.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
 
-      <p className="mt-4 text-xs text-muted">
-        TRF-2085 menunjukkan varians &minus;6 unit antara jumlah yang dikirim dan diterima, ditandai untuk ditinjau di
-        Cabang Renon.
-      </p>
+      {transfers.some((t) => t.id === "TRF-2085") && (
+        <p className="mt-4 text-xs text-muted">
+          TRF-2085 menunjukkan varians &minus;6 unit antara jumlah yang dikirim dan diterima, ditandai untuk ditinjau
+          di Cabang Renon.
+        </p>
+      )}
     </div>
   );
 }

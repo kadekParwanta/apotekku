@@ -1,14 +1,17 @@
 import { NavLink } from "react-router-dom";
 import { branches } from "../data/mockData.js";
+import { useBranch } from "../context/BranchContext.jsx";
 
 const nav = [
   { to: "/backoffice", label: "Ringkasan stok", end: true },
   { to: "/backoffice/transfers", label: "Transfer" },
   { to: "/backoffice/replenishment", label: "Pengisian ulang" },
-  { to: "/backoffice/forecasting", label: "Peramalan" },
+  { to: "/backoffice/forecasting", label: "Fast moving" },
 ];
 
 export default function Sidebar() {
+  const { branchId, setBranchId } = useBranch();
+
   return (
     <aside className="flex h-full w-60 shrink-0 flex-col border-r border-line bg-panel">
       <div className="border-b border-line px-5 py-5">
@@ -22,7 +25,8 @@ export default function Sidebar() {
         </label>
         <select
           id="branch-select"
-          defaultValue="BR-01"
+          value={branchId}
+          onChange={(e) => setBranchId(e.target.value)}
           className="w-full rounded border border-line bg-white px-2.5 py-1.5 text-sm text-ink focus-visible:outline-2"
         >
           {branches.map((b) => (

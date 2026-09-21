@@ -1,4 +1,5 @@
-import { forecastAtRisk, branches } from "../../data/mockData.js";
+import { branches, getForecastForBranch } from "../../data/mockData.js";
+import { useBranch } from "../../context/BranchContext.jsx";
 
 function branchName(id) {
   return branches.find((b) => b.id === id)?.name || id;
@@ -15,6 +16,9 @@ function Sparkbars({ base, current }) {
 }
 
 export default function Forecasting() {
+  const { branchId } = useBranch();
+  const forecastAtRisk = getForecastForBranch(branchId);
+
   return (
     <div>
       <header className="mb-6">
@@ -56,6 +60,13 @@ export default function Forecasting() {
                 <td className="px-4 py-3 text-xs text-muted">{row.note}</td>
               </tr>
             ))}
+            {forecastAtRisk.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-4 py-8 text-center text-sm text-muted">
+                  Tidak ada SKU cepat bergerak untuk cabang ini.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

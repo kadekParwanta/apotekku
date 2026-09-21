@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { replenishmentQueue, branches } from "../../data/mockData.js";
+import { branches, getReplenishmentForBranch } from "../../data/mockData.js";
 import Badge from "../../components/Badge.jsx";
+import { useBranch } from "../../context/BranchContext.jsx";
 
 function branchName(id) {
   return branches.find((b) => b.id === id)?.name || id;
@@ -13,10 +14,12 @@ const decisionLabels = {
 };
 
 export default function Replenishment() {
+  const { branchId } = useBranch();
   const [decisions, setDecisions] = useState({});
 
   const decide = (id, value) => setDecisions((d) => ({ ...d, [id]: value }));
 
+  const replenishmentQueue = getReplenishmentForBranch(branchId);
   const pending = replenishmentQueue.filter((r) => !decisions[r.id]);
   const resolved = replenishmentQueue.filter((r) => decisions[r.id]);
 

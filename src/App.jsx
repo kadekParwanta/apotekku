@@ -8,23 +8,26 @@ import Forecasting from "./pages/backoffice/Forecasting.jsx";
 import PosLayout from "./layouts/PosLayout.jsx";
 import Sale from "./pages/pos/Sale.jsx";
 import ShiftClose from "./pages/pos/ShiftClose.jsx";
+import { BranchProvider } from "./context/BranchContext.jsx";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
+    <BranchProvider>
+      <Routes>
+        <Route path="/" element={<Landing />} />
 
-      <Route path="/backoffice" element={<BackOfficeLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="transfers" element={<Transfers />} />
-        <Route path="replenishment" element={<Replenishment />} />
-        <Route path="forecasting" element={<Forecasting />} />
-      </Route>
+        <Route path="/backoffice" element={<BackOfficeLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="transfers" element={<Transfers />} />
+          <Route path="replenishment" element={<Replenishment />} />
+          <Route path="forecasting" element={<Forecasting />} />
+        </Route>
 
-      <Route path="/pos" element={<PosLayout />}>
-        <Route index element={<Sale />} />
-        <Route path="shift-close" element={<ShiftClose />} />
-      </Route>
-    </Routes>
+        <Route path="/pos" element={<PosLayout />}>
+          <Route index element={<Sale />} />
+          <Route path="shift-close" element={<ShiftClose />} />
+        </Route>
+      </Routes>
+    </BranchProvider>
   );
 }
