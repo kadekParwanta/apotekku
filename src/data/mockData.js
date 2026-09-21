@@ -907,3 +907,41 @@ export function getStockMovements(sku, branchId) {
 
   return events.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
+
+// Splits a branch-SKU's on-hand quantity into its physical lots for FEFO
+// detail. The stock snapshot only tracks the current front-of-line batch, so
+// when there's an older cost-receipt lot behind it we deterministically carve
+// off a smaller, sooner-to-expire remainder from it. Quantities always sum
+// back to stock.onHand.
+export function getStockBatches(sku, branchId) {
+  const stock = getStockForBranch(branchId).find((s) => s.sku === sku);
+  if (!stock) return [];
+
+  const receipts = costReceipts[sku] || [];
+  if (receipts.length < 2 || stock.onHand < 5) {
+    return [
+      {
+        batch: stock.batch,
+        expiry: stock.expiry,
+        receivedAt: receipts.length ? receipts[receipts.length - 1].date : null,
+        qty: stock.onHand,
+      },
+    ];
+  }
+
+  const rand = seededRandom(hashString(`batches-${branchId}-${sku}`));
+  const older = receipts[receipts.length - 2];
+  const newer = receipts[receipts.length - 1];
+
+  const olderShare = 0.12 + rand() * 0.18;
+  const olderQty = Math.max(1, Math.min(Math.round(stock.onHand * olderShare), stock.onHand - 1));
+  const newerQty = stock.onHand - olderQty;
+
+  const olderExpiry = new Date(stock.expiry);
+  olderExpiry.setMonth(olderExpiry.getMonth() - (4 + Math.floor(rand() * 4)));
+
+  return [
+    { batch: older.batch, expiry: olderExpiry.toISOString().slice(0, 10), receivedAt: older.date, qty: olderQty },
+    { batch: newer.batch, expiry: stock.expiry, receivedAt: newer.date, qty: newerQty },
+  ].sort((a, b) => (a.expiry < b.expiry ? -1 : a.expiry > b.expiry ? 1 : 0));
+}
