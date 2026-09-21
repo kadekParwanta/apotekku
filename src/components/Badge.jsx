@@ -11,15 +11,15 @@ const styles = {
 };
 
 const labels = {
-  ok: "In range",
-  "below-min": "Below min",
-  critical: "Critical",
-  "near-expiry": "Near expiry",
-  warning: "Needs review",
-  "in-transit": "In transit",
-  dispatched: "Dispatched",
-  delivered: "Delivered",
-  "pending-approval": "Pending approval",
+  ok: "Sesuai batas",
+  "below-min": "Di bawah minimum",
+  critical: "Kritis",
+  "near-expiry": "Mendekati kedaluwarsa",
+  warning: "Perlu ditinjau",
+  "in-transit": "Dalam perjalanan",
+  dispatched: "Dikirim",
+  delivered: "Terkirim",
+  "pending-approval": "Menunggu persetujuan",
 };
 
 export default function Badge({ status, children }) {

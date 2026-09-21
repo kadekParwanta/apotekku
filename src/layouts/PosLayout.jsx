@@ -7,7 +7,7 @@ export default function PosLayout() {
         <div className="flex items-center gap-3">
           <span className="font-mono text-sm tracking-tight text-white/60">Farmasi POS</span>
           <span className="text-white/30">/</span>
-          <span className="text-sm font-medium">Sanur Branch</span>
+          <span className="text-sm font-medium">Cabang Sanur</span>
         </div>
         <nav className="flex items-center gap-1">
           <NavLink
@@ -17,7 +17,7 @@ export default function PosLayout() {
               `px-4 py-1.5 text-sm font-medium ${isActive ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`
             }
           >
-            Sale
+            Penjualan
           </NavLink>
           <NavLink
             to="/pos/shift-close"
@@ -28,7 +28,7 @@ export default function PosLayout() {
             Shift
           </NavLink>
           <NavLink to="/" className="ml-3 px-4 py-1.5 text-sm text-white/50 hover:text-white">
-            ← Back office
+            ← Kembali ke Back Office
           </NavLink>
         </nav>
       </header>

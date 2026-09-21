@@ -24,15 +24,15 @@ export default function Dashboard() {
   return (
     <div>
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold text-ink">Stock overview</h1>
-        <p className="mt-1 text-sm text-muted">Sanur Branch \u00b7 as of Sep 19, 2026, 09:12</p>
+        <h1 className="text-2xl font-semibold text-ink">Ringkasan stok</h1>
+        <p className="mt-1 text-sm text-muted">Cabang Sanur \u00b7 per 19 Sep 2026, 09:12</p>
       </header>
 
       <div className="mb-8 grid grid-cols-4 gap-3">
-        <StatCard label="SKUs below minimum" value={belowMin} tone="critical" sub="needs replenishment" />
-        <StatCard label="Near-expiry batches" value={nearExpiry} tone="warning" sub="within 60 days" />
-        <StatCard label="Units in transit" value={inTransitUnits} sub="incoming from Main Warehouse" />
-        <StatCard label="Active SKUs" value={stockSnapshot.length} sub="tracked at this branch" />
+        <StatCard label="SKU di bawah minimum" value={belowMin} tone="critical" sub="perlu diisi ulang" />
+        <StatCard label="Batch mendekati kedaluwarsa" value={nearExpiry} tone="warning" sub="dalam 60 hari" />
+        <StatCard label="Unit dalam perjalanan" value={inTransitUnits} sub="masuk dari Gudang Utama" />
+        <StatCard label="SKU aktif" value={stockSnapshot.length} sub="dipantau di cabang ini" />
       </div>
 
       <div className="border border-line bg-panel">
@@ -40,12 +40,12 @@ export default function Dashboard() {
           <thead>
             <tr className="border-b border-line text-left text-xs text-muted">
               <th className="px-4 py-3 font-medium">SKU</th>
-              <th className="px-4 py-3 font-medium">Item</th>
-              <th className="px-4 py-3 font-medium text-right">On hand</th>
-              <th className="px-4 py-3 font-medium text-right">In transit</th>
-              <th className="px-4 py-3 font-medium text-right">Min / Max</th>
+              <th className="px-4 py-3 font-medium">Barang</th>
+              <th className="px-4 py-3 font-medium text-right">Stok tersedia</th>
+              <th className="px-4 py-3 font-medium text-right">Dalam perjalanan</th>
+              <th className="px-4 py-3 font-medium text-right">Min / Maks</th>
               <th className="px-4 py-3 font-medium">Batch</th>
-              <th className="px-4 py-3 font-medium">Expiry</th>
+              <th className="px-4 py-3 font-medium">Kedaluwarsa</th>
               <th className="px-4 py-3 font-medium">Status</th>
             </tr>
           </thead>

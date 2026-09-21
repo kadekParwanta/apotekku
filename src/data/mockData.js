@@ -1,9 +1,9 @@
 export const branches = [
-  { id: "MAIN", name: "Main Warehouse", city: "Denpasar (Central)" },
-  { id: "BR-01", name: "Sanur Branch", city: "Sanur" },
-  { id: "BR-02", name: "Ubud Branch", city: "Ubud" },
-  { id: "BR-03", name: "Kuta Branch", city: "Kuta" },
-  { id: "BR-04", name: "Renon Branch", city: "Renon" },
+  { id: "MAIN", name: "Gudang Utama", city: "Denpasar (Pusat)" },
+  { id: "BR-01", name: "Cabang Sanur", city: "Sanur" },
+  { id: "BR-02", name: "Cabang Ubud", city: "Ubud" },
+  { id: "BR-03", name: "Cabang Kuta", city: "Kuta" },
+  { id: "BR-04", name: "Cabang Renon", city: "Renon" },
 ];
 
 // Branch-SKU stock snapshot for the currently selected branch (BR-01, Sanur)
@@ -11,7 +11,7 @@ export const stockSnapshot = [
   {
     sku: "PCM-500-10",
     name: "Paracetamol 500mg",
-    form: "Tablet, strip of 10",
+    form: "Tablet, strip isi 10",
     onHand: 42,
     inTransit: 0,
     min: 80,
@@ -23,7 +23,7 @@ export const stockSnapshot = [
   {
     sku: "AMX-500-CAP",
     name: "Amoxicillin 500mg",
-    form: "Capsule, strip of 10",
+    form: "Kapsul, strip isi 10",
     onHand: 96,
     inTransit: 60,
     min: 100,
@@ -48,7 +48,7 @@ export const stockSnapshot = [
   {
     sku: "CTZ-10-TAB",
     name: "Cetirizine 10mg",
-    form: "Tablet, strip of 10",
+    form: "Tablet, strip isi 10",
     onHand: 18,
     inTransit: 40,
     min: 60,
@@ -60,7 +60,7 @@ export const stockSnapshot = [
   {
     sku: "AMOXCLAV-625",
     name: "Amoxicillin-Clavulanate 625mg",
-    form: "Tablet, strip of 6",
+    form: "Tablet, strip isi 6",
     onHand: 30,
     inTransit: 0,
     min: 40,
@@ -73,7 +73,7 @@ export const stockSnapshot = [
   {
     sku: "IBU-400-TAB",
     name: "Ibuprofen 400mg",
-    form: "Tablet, strip of 10",
+    form: "Tablet, strip isi 10",
     onHand: 140,
     inTransit: 0,
     min: 80,
@@ -85,7 +85,7 @@ export const stockSnapshot = [
   {
     sku: "SALB-INH",
     name: "Salbutamol Inhaler 100mcg",
-    form: "Inhaler, 200 doses",
+    form: "Inhaler, 200 dosis",
     onHand: 9,
     inTransit: 20,
     min: 15,
@@ -162,7 +162,7 @@ export const replenishmentQueue = [
     min: 60,
     max: 200,
     suggestedQty: 182,
-    reason: "Below minimum",
+    reason: "Di bawah minimum",
     flag: "critical",
   },
   {
@@ -174,7 +174,7 @@ export const replenishmentQueue = [
     min: 15,
     max: 50,
     suggestedQty: 41,
-    reason: "Below minimum + flagged fast-moving",
+    reason: "Di bawah minimum + ditandai cepat bergerak",
     flag: "critical",
     fastMoving: true,
   },
@@ -187,7 +187,7 @@ export const replenishmentQueue = [
     min: 90,
     max: 320,
     suggestedQty: 265,
-    reason: "Below minimum + flagged fast-moving",
+    reason: "Di bawah minimum + ditandai cepat bergerak",
     flag: "warning",
     fastMoving: true,
   },
@@ -200,7 +200,7 @@ export const replenishmentQueue = [
     min: 100,
     max: 250,
     suggestedQty: 180,
-    reason: "Below minimum",
+    reason: "Di bawah minimum",
     flag: "warning",
   },
 ];
@@ -213,7 +213,7 @@ export const forecastAtRisk = [
     velocity7d: 14.2,
     velocity28dAvg: 6.1,
     change: "+133%",
-    note: "Spike since Sep 14 \u2014 above 2\u03c3 of rolling average",
+    note: "Lonjakan sejak 14 Sep \u2014 di atas 2\u03c3 dari rata-rata bergerak",
   },
   {
     sku: "SALB-INH",
@@ -222,7 +222,7 @@ export const forecastAtRisk = [
     velocity7d: 3.4,
     velocity28dAvg: 1.5,
     change: "+127%",
-    note: "Sustained rise over 9 days",
+    note: "Kenaikan berkelanjutan selama 9 hari",
   },
   {
     sku: "PCM-500-10",
@@ -231,7 +231,7 @@ export const forecastAtRisk = [
     velocity7d: 48.0,
     velocity28dAvg: 24.5,
     change: "+96%",
-    note: "Spike since Sep 15 \u2014 above 2\u03c3 of rolling average",
+    note: "Lonjakan sejak 15 Sep \u2014 di atas 2\u03c3 dari rata-rata bergerak",
   },
   {
     sku: "ORS-SACH",
@@ -240,25 +240,25 @@ export const forecastAtRisk = [
     velocity7d: 30.1,
     velocity28dAvg: 17.8,
     change: "+69%",
-    note: "Trending up, within normal seasonal range",
+    note: "Tren naik, masih dalam kisaran musiman normal",
   },
 ];
 
 // POS catalog for the sale screen
 export const posCatalog = [
-  { sku: "PCM-500-10", name: "Paracetamol 500mg", form: "Strip of 10", price: 8500, rx: false, batch: "PCM24-118", stock: 42 },
-  { sku: "AMX-500-CAP", name: "Amoxicillin 500mg", form: "Strip of 10", price: 22000, rx: true, batch: "AMX24-076", stock: 96 },
+  { sku: "PCM-500-10", name: "Paracetamol 500mg", form: "Strip isi 10", price: 8500, rx: false, batch: "PCM24-118", stock: 42 },
+  { sku: "AMX-500-CAP", name: "Amoxicillin 500mg", form: "Strip isi 10", price: 22000, rx: true, batch: "AMX24-076", stock: 96 },
   { sku: "ORS-SACH", name: "Oral Rehydration Salt", form: "Sachet", price: 3000, rx: false, batch: "ORS23-054", stock: 210 },
-  { sku: "CTZ-10-TAB", name: "Cetirizine 10mg", form: "Strip of 10", price: 12500, rx: false, batch: "CTZ24-041", stock: 18 },
-  { sku: "AMOXCLAV-625", name: "Amoxicillin-Clavulanate 625mg", form: "Strip of 6", price: 45000, rx: true, batch: "AMC24-009", stock: 30 },
-  { sku: "IBU-400-TAB", name: "Ibuprofen 400mg", form: "Strip of 10", price: 9500, rx: false, batch: "IBU24-133", stock: 140 },
+  { sku: "CTZ-10-TAB", name: "Cetirizine 10mg", form: "Strip isi 10", price: 12500, rx: false, batch: "CTZ24-041", stock: 18 },
+  { sku: "AMOXCLAV-625", name: "Amoxicillin-Clavulanate 625mg", form: "Strip isi 6", price: 45000, rx: true, batch: "AMC24-009", stock: 30 },
+  { sku: "IBU-400-TAB", name: "Ibuprofen 400mg", form: "Strip isi 10", price: 9500, rx: false, batch: "IBU24-133", stock: 140 },
   { sku: "SALB-INH", name: "Salbutamol Inhaler 100mcg", form: "Inhaler", price: 68000, rx: true, batch: "SLB24-021", stock: 9 },
-  { sku: "VITC-1000", name: "Vitamin C 1000mg", form: "Strip of 10", price: 15000, rx: false, batch: "VTC24-090", stock: 88 },
+  { sku: "VITC-1000", name: "Vitamin C 1000mg", form: "Strip isi 10", price: 15000, rx: false, batch: "VTC24-090", stock: 88 },
 ];
 
 export const shiftSummary = {
   cashier: "Kadek W.",
-  branch: "Sanur Branch",
+  branch: "Cabang Sanur",
   opened: "2026-09-19 08:00",
   closing: "2026-09-19 16:00",
   transactions: 63,

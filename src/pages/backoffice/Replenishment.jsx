@@ -6,6 +6,12 @@ function branchName(id) {
   return branches.find((b) => b.id === id)?.name || id;
 }
 
+const decisionLabels = {
+  approved: "Disetujui",
+  adjusted: "Disesuaikan",
+  rejected: "Ditolak",
+};
+
 export default function Replenishment() {
   const [decisions, setDecisions] = useState({});
 
@@ -17,9 +23,9 @@ export default function Replenishment() {
   return (
     <div>
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold text-ink">Replenishment approvals</h1>
+        <h1 className="text-2xl font-semibold text-ink">Persetujuan pengisian ulang</h1>
         <p className="mt-1 text-sm text-muted">
-          Every suggestion requires manual sign-off before dispatch &mdash; nothing here auto-approves.
+          Setiap saran memerlukan persetujuan manual sebelum dikirim &mdash; tidak ada yang disetujui otomatis di sini.
         </p>
       </header>
 
@@ -30,10 +36,10 @@ export default function Replenishment() {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs text-muted">{r.id}</span>
-                  <Badge status={r.flag}>{r.flag === "critical" ? "Critical" : "Needs review"}</Badge>
+                  <Badge status={r.flag}>{r.flag === "critical" ? "Kritis" : "Perlu ditinjau"}</Badge>
                   {r.fastMoving && (
                     <span className="inline-flex items-center gap-1 border border-amber/30 bg-amber-light px-2 py-0.5 text-xs font-medium text-amber">
-                      Fast-moving
+                      Cepat Bergerak
                     </span>
                   )}
                 </div>
@@ -45,10 +51,10 @@ export default function Replenishment() {
 
               <div className="text-right">
                 <div className="font-mono text-xs text-muted">
-                  on hand {r.onHand} &middot; min {r.min} / max {r.max}
+                  stok {r.onHand} &middot; min {r.min} / maks {r.max}
                 </div>
                 <div className="mt-1 font-mono text-lg tabular text-ink">+{r.suggestedQty}</div>
-                <div className="text-xs text-muted">suggested transfer qty</div>
+                <div className="text-xs text-muted">jumlah transfer yang disarankan</div>
               </div>
             </div>
 
@@ -57,19 +63,19 @@ export default function Replenishment() {
                 onClick={() => decide(r.id, "approved")}
                 className="border border-pine bg-pine px-3 py-1.5 text-sm font-medium text-white hover:bg-pine-dark"
               >
-                Approve transfer
+                Setujui transfer
               </button>
               <button
                 onClick={() => decide(r.id, "adjusted")}
                 className="border border-line bg-white px-3 py-1.5 text-sm text-ink hover:bg-line/30"
               >
-                Adjust quantity
+                Sesuaikan jumlah
               </button>
               <button
                 onClick={() => decide(r.id, "rejected")}
                 className="border border-line bg-white px-3 py-1.5 text-sm text-muted hover:bg-line/30"
               >
-                Reject
+                Tolak
               </button>
             </div>
           </div>
@@ -77,14 +83,14 @@ export default function Replenishment() {
 
         {pending.length === 0 && (
           <div className="border border-line bg-panel px-5 py-8 text-center text-sm text-muted">
-            Queue is clear. New suggestions appear here as branch stock crosses minimum thresholds.
+            Antrean kosong. Saran baru akan muncul di sini saat stok cabang melewati batas minimum.
           </div>
         )}
       </div>
 
       {resolved.length > 0 && (
         <div className="mt-8">
-          <h2 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted">Reviewed this session</h2>
+          <h2 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted">Ditinjau pada sesi ini</h2>
           <div className="space-y-1.5">
             {resolved.map((r) => (
               <div
@@ -94,7 +100,7 @@ export default function Replenishment() {
                 <span className="text-ink">
                   {r.name} <span className="text-xs text-muted">\u00b7 {branchName(r.branch)}</span>
                 </span>
-                <span className="text-xs font-medium capitalize text-muted">{decisions[r.id]}</span>
+                <span className="text-xs font-medium text-muted">{decisionLabels[decisions[r.id]]}</span>
               </div>
             ))}
           </div>

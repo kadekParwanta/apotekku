@@ -8,8 +8,8 @@ function Sparkbars({ base, current }) {
   const max = Math.max(base, current) * 1.15;
   return (
     <div className="flex h-8 items-end gap-1">
-      <div className="w-2.5 bg-line" style={{ height: `${(base / max) * 100}%` }} title="28-day average" />
-      <div className="w-2.5 bg-amber" style={{ height: `${(current / max) * 100}%` }} title="last 7 days" />
+      <div className="w-2.5 bg-line" style={{ height: `${(base / max) * 100}%` }} title="Rata-rata 28 hari" />
+      <div className="w-2.5 bg-amber" style={{ height: `${(current / max) * 100}%` }} title="7 hari terakhir" />
     </div>
   );
 }
@@ -18,9 +18,9 @@ export default function Forecasting() {
   return (
     <div>
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold text-ink">Fast-moving stock</h1>
+        <h1 className="text-2xl font-semibold text-ink">Stok cepat bergerak</h1>
         <p className="mt-1 text-sm text-muted">
-          7-day sales velocity vs. 28-day rolling average, flagged when a SKU moves more than 2&sigma; above trend.
+          Kecepatan penjualan 7 hari dibandingkan rata-rata bergerak 28 hari, ditandai jika SKU bergerak lebih dari 2&sigma; di atas tren.
         </p>
       </header>
 
@@ -28,13 +28,13 @@ export default function Forecasting() {
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-line text-left text-xs text-muted">
-              <th className="px-4 py-3 font-medium">Item</th>
-              <th className="px-4 py-3 font-medium">Branch</th>
-              <th className="px-4 py-3 font-medium text-right">7d avg / day</th>
-              <th className="px-4 py-3 font-medium text-right">28d avg / day</th>
-              <th className="px-4 py-3 font-medium">Trend</th>
-              <th className="px-4 py-3 font-medium text-right">Change</th>
-              <th className="px-4 py-3 font-medium">Note</th>
+              <th className="px-4 py-3 font-medium">Barang</th>
+              <th className="px-4 py-3 font-medium">Cabang</th>
+              <th className="px-4 py-3 font-medium text-right">Rata-rata 7h/hari</th>
+              <th className="px-4 py-3 font-medium text-right">Rata-rata 28h/hari</th>
+              <th className="px-4 py-3 font-medium">Tren</th>
+              <th className="px-4 py-3 font-medium text-right">Perubahan</th>
+              <th className="px-4 py-3 font-medium">Catatan</th>
             </tr>
           </thead>
           <tbody>
@@ -62,10 +62,10 @@ export default function Forecasting() {
 
       <div className="mt-4 flex items-center gap-4 text-xs text-muted">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 bg-line" /> 28-day average
+          <span className="inline-block h-2.5 w-2.5 bg-line" /> Rata-rata 28 hari
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 bg-amber" /> Last 7 days
+          <span className="inline-block h-2.5 w-2.5 bg-amber" /> 7 hari terakhir
         </span>
       </div>
     </div>

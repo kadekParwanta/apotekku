@@ -72,16 +72,16 @@ export default function Sale() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-pine-light/20 text-2xl">
             ✓
           </div>
-          <h2 className="text-xl font-semibold text-white">Payment complete</h2>
+          <h2 className="text-xl font-semibold text-white">Pembayaran selesai</h2>
           <p className="mt-1 text-sm text-white/60">
-            {formatIDR(total)} paid by {paymentDone}
+            {formatIDR(total)} dibayar dengan {paymentDone === "cash" ? "tunai" : "kartu"}
           </p>
-          <p className="mt-4 text-xs text-white/40">Receipt printing to counter printer&hellip;</p>
+          <p className="mt-4 text-xs text-white/40">Struk sedang dicetak ke printer kasir&hellip;</p>
           <button
             onClick={newSale}
             className="mt-6 w-full bg-white py-3 text-base font-semibold text-ink hover:bg-white/90"
           >
-            Start next sale
+            Mulai penjualan berikutnya
           </button>
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function Sale() {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Scan barcode or search item name / SKU"
+            placeholder="Pindai barcode atau cari nama barang / SKU"
             className="w-full rounded bg-white/10 px-4 py-3 text-base text-white placeholder:text-white/40 focus-visible:outline-white"
           />
         </div>
@@ -119,7 +119,7 @@ export default function Sale() {
               </div>
               <span className="text-xs text-white/50">{item.form}</span>
               <span className="mt-1 font-mono text-sm tabular text-white/90">{formatIDR(item.price)}</span>
-              <span className="font-mono text-[11px] tabular text-white/30">{item.stock} in stock</span>
+              <span className="font-mono text-[11px] tabular text-white/30">{item.stock} stok tersedia</span>
             </button>
           ))}
         </div>
@@ -128,18 +128,18 @@ export default function Sale() {
       {/* Cart */}
       <div className="flex w-1/3 flex-col bg-ink">
         <div className="border-b border-white/10 px-5 py-4">
-          <h2 className="text-sm font-medium text-white/70">Current sale</h2>
+          <h2 className="text-sm font-medium text-white/70">Penjualan saat ini</h2>
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-3">
           {cart.length === 0 && (
-            <p className="mt-8 text-center text-sm text-white/30">Cart is empty. Tap an item to add it.</p>
+            <p className="mt-8 text-center text-sm text-white/30">Keranjang kosong. Ketuk barang untuk menambahkannya.</p>
           )}
           <ul className="space-y-3">
             {cart.map((c) => (
               <li key={c.sku} className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <div className="truncate text-sm text-white">{c.name}</div>
-                  <div className="font-mono text-xs text-white/40">{formatIDR(c.price)} each</div>
+                  <div className="font-mono text-xs text-white/40">{formatIDR(c.price)} / item</div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <button
@@ -162,7 +162,7 @@ export default function Sale() {
         </div>
         <div className="border-t border-white/10 px-5 py-4">
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-sm text-white/60">Total</span>
+            <span className="text-sm text-white/60">Total belanja</span>
             <span className="font-mono text-xl tabular text-white">{formatIDR(total)}</span>
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -171,14 +171,14 @@ export default function Sale() {
               onClick={() => completeSale("cash")}
               className="bg-white py-3 text-sm font-semibold text-ink hover:bg-white/90 disabled:opacity-30"
             >
-              Pay cash
+              Bayar tunai
             </button>
             <button
               disabled={cart.length === 0}
               onClick={() => completeSale("card")}
               className="bg-pine-light py-3 text-sm font-semibold text-white hover:bg-pine disabled:opacity-30"
             >
-              Pay card
+              Bayar kartu
             </button>
           </div>
         </div>
@@ -189,14 +189,14 @@ export default function Sale() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-sm border border-white/10 bg-pine-dark px-6 py-6">
             <div className="mb-1 inline-flex items-center gap-1.5 rounded bg-brick px-2 py-0.5 text-xs font-semibold text-white">
-              Rx required
+              Perlu resep
             </div>
-            <h3 className="mt-2 text-lg font-semibold text-white">Pharmacist verification</h3>
+            <h3 className="mt-2 text-lg font-semibold text-white">Verifikasi apoteker</h3>
             <p className="mt-1 text-sm text-white/60">
-              {verifyItem.name} requires prescription sign-off before it can be added to the sale.
+              {verifyItem.name} memerlukan persetujuan resep sebelum dapat ditambahkan ke penjualan.
             </p>
             <label className="mt-4 block text-xs text-white/50" htmlFor="pin">
-              Pharmacist PIN
+              PIN apoteker
             </label>
             <input
               id="pin"
@@ -212,7 +212,7 @@ export default function Sale() {
               placeholder="••••"
               autoFocus
             />
-            {pinError && <p className="mt-1.5 text-xs text-brick">Enter the pharmacist's PIN to continue.</p>}
+            {pinError && <p className="mt-1.5 text-xs text-brick">Masukkan PIN apoteker untuk melanjutkan.</p>}
             <div className="mt-5 flex gap-2">
               <button
                 onClick={() => {
@@ -222,13 +222,13 @@ export default function Sale() {
                 }}
                 className="flex-1 border border-white/20 py-2.5 text-sm text-white/70 hover:bg-white/5"
               >
-                Cancel
+                Batal
               </button>
               <button
                 onClick={confirmPin}
                 className="flex-1 bg-white py-2.5 text-sm font-semibold text-ink hover:bg-white/90"
               >
-                Verify & add
+                Verifikasi & tambahkan
               </button>
             </div>
           </div>

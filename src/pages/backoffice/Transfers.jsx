@@ -10,11 +10,11 @@ export default function Transfers() {
     <div>
       <header className="mb-6 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-ink">Transfers</h1>
-          <p className="mt-1 text-sm text-muted">Main Warehouse \u2192 branch movement, in order of last activity</p>
+          <h1 className="text-2xl font-semibold text-ink">Transfer</h1>
+          <p className="mt-1 text-sm text-muted">Pergerakan Gudang Utama \u2192 cabang, diurutkan berdasarkan aktivitas terakhir</p>
         </div>
         <button className="border border-pine bg-pine px-4 py-2 text-sm font-medium text-white hover:bg-pine-dark">
-          New transfer
+          Transfer baru
         </button>
       </header>
 
@@ -23,11 +23,11 @@ export default function Transfers() {
           <thead>
             <tr className="border-b border-line text-left text-xs text-muted">
               <th className="px-4 py-3 font-medium">Transfer</th>
-              <th className="px-4 py-3 font-medium">From</th>
-              <th className="px-4 py-3 font-medium">To</th>
-              <th className="px-4 py-3 font-medium text-right">Items</th>
-              <th className="px-4 py-3 font-medium text-right">Units</th>
-              <th className="px-4 py-3 font-medium">Requested</th>
+              <th className="px-4 py-3 font-medium">Dari</th>
+              <th className="px-4 py-3 font-medium">Ke</th>
+              <th className="px-4 py-3 font-medium text-right">Item</th>
+              <th className="px-4 py-3 font-medium text-right">Unit</th>
+              <th className="px-4 py-3 font-medium">Diminta</th>
               <th className="px-4 py-3 font-medium">ETA</th>
               <th className="px-4 py-3 font-medium">Status</th>
             </tr>
@@ -48,7 +48,7 @@ export default function Transfers() {
                     {typeof t.variance === "number" && t.variance !== 0 && (
                       <span className="text-xs text-brick">
                         {t.variance > 0 ? "+" : ""}
-                        {t.variance} variance
+                        {t.variance} varians
                       </span>
                     )}
                   </div>
@@ -60,8 +60,8 @@ export default function Transfers() {
       </div>
 
       <p className="mt-4 text-xs text-muted">
-        TRF-2085 shows a &minus;6 unit variance between dispatched and received quantity, flagged for review at Renon
-        Branch.
+        TRF-2085 menunjukkan varians &minus;6 unit antara jumlah yang dikirim dan diterima, ditandai untuk ditinjau di
+        Cabang Renon.
       </p>
     </div>
   );

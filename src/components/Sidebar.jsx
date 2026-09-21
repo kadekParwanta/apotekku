@@ -2,10 +2,10 @@ import { NavLink } from "react-router-dom";
 import { branches } from "../data/mockData.js";
 
 const nav = [
-  { to: "/backoffice", label: "Stock overview", end: true },
-  { to: "/backoffice/transfers", label: "Transfers" },
-  { to: "/backoffice/replenishment", label: "Replenishment" },
-  { to: "/backoffice/forecasting", label: "Forecasting" },
+  { to: "/backoffice", label: "Ringkasan stok", end: true },
+  { to: "/backoffice/transfers", label: "Transfer" },
+  { to: "/backoffice/replenishment", label: "Pengisian ulang" },
+  { to: "/backoffice/forecasting", label: "Peramalan" },
 ];
 
 export default function Sidebar() {
@@ -18,7 +18,7 @@ export default function Sidebar() {
 
       <div className="border-b border-line px-5 py-4">
         <label className="block text-xs text-muted mb-1.5" htmlFor="branch-select">
-          Branch
+          Cabang
         </label>
         <select
           id="branch-select"
@@ -57,7 +57,7 @@ export default function Sidebar() {
 
       <div className="border-t border-line px-5 py-4">
         <NavLink to="/" className="text-xs text-muted hover:text-pine">
-          ← Switch to POS
+          ← Beralih ke POS
         </NavLink>
       </div>
     </aside>
