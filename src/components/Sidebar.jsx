@@ -4,6 +4,7 @@ import { useBranch } from "../context/BranchContext.jsx";
 
 const nav = [
   { to: "/backoffice", label: "Ringkasan stok", end: true },
+  { to: "/backoffice/receiving", label: "Penerimaan barang" },
   { to: "/backoffice/transfers", label: "Transfer" },
   { to: "/backoffice/replenishment", label: "Pengisian ulang" },
   { to: "/backoffice/forecasting", label: "Fast moving" },

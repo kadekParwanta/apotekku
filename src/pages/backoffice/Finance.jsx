@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   branches,
   formatIDR,
+  getGoodsReceiptByInvoice,
   getInventoryValuation,
   getPL,
   getPayablesForBranch,
@@ -149,9 +151,17 @@ function Valuation({ branchId }) {
   );
 }
 
-function Payables({ branchId }) {
+function Payables({ branchId, highlightId }) {
   const rows = getPayablesForBranch(branchId);
   const outstanding = rows.filter((r) => r.status !== "paid").reduce((sum, r) => sum + r.amount, 0);
+  const [expanded, setExpanded] = useState(highlightId || null);
+
+  useEffect(() => {
+    if (!highlightId) return;
+    setExpanded(highlightId);
+    const row = document.querySelector(`[data-row-id="${highlightId}"]`);
+    row?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [highlightId]);
 
   if (branchId !== "MAIN") {
     return (
@@ -180,18 +190,90 @@ function Payables({ branchId }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((p) => (
-              <tr key={p.id} className="border-b border-line last:border-0 hover:bg-line/20">
-                <td className="px-4 py-3 text-ink">{p.supplier}</td>
-                <td className="px-4 py-3 font-mono text-xs text-muted">{p.invoiceNo}</td>
-                <td className="px-4 py-3 text-right font-mono tabular">{formatIDR(p.amount)}</td>
-                <td className="px-4 py-3 text-xs text-muted">{p.terms}</td>
-                <td className="px-4 py-3 text-xs text-muted">{p.dueDate}</td>
-                <td className="px-4 py-3">
-                  <Badge status={p.status} />
-                </td>
-              </tr>
-            ))}
+            {rows.map((p) => {
+              const receipt = getGoodsReceiptByInvoice(p.id);
+              const isExpanded = expanded === p.id;
+              const isHighlighted = highlightId === p.id;
+              return (
+                <Fragment key={p.id}>
+                  <tr
+                    data-row-id={p.id}
+                    onClick={() => setExpanded(isExpanded ? null : p.id)}
+                    className={`cursor-pointer border-b border-line last:border-0 hover:bg-line/20 ${
+                      isHighlighted ? "bg-amber-light/40" : ""
+                    }`}
+                  >
+                    <td className="px-4 py-3 text-ink">
+                      {p.supplier}
+                      <div className="font-mono text-[11px] text-muted">{p.id}</div>
+                    </td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted">{p.invoiceNo}</td>
+                    <td className="px-4 py-3 text-right font-mono tabular">{formatIDR(p.amount)}</td>
+                    <td className="px-4 py-3 text-xs text-muted">{p.terms}</td>
+                    <td className="px-4 py-3 text-xs text-muted">{p.dueDate}</td>
+                    <td className="px-4 py-3">
+                      <Badge status={p.status} />
+                    </td>
+                  </tr>
+                  {isExpanded && (
+                    <tr className="border-b border-line last:border-0 bg-white">
+                      <td colSpan={6} className="px-4 py-4">
+                        {receipt ? (
+                          <>
+                            <table className="w-full border-collapse text-xs">
+                              <thead>
+                                <tr className="text-left text-muted">
+                                  <th className="pb-2 font-medium">Barang</th>
+                                  <th className="pb-2 font-medium">Batch</th>
+                                  <th className="pb-2 font-medium">Kedaluwarsa</th>
+                                  <th className="pb-2 font-medium text-right">Biaya satuan</th>
+                                  <th className="pb-2 font-medium text-right">Diterima / Dipesan</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {receipt.items.map((it) => (
+                                  <tr key={it.sku} className="border-t border-line/60">
+                                    <td className="py-2 text-ink">
+                                      {it.name}
+                                      <div className="font-mono text-[11px] text-muted">{it.sku}</div>
+                                    </td>
+                                    <td className="py-2 font-mono text-muted">{it.batch}</td>
+                                    <td className="py-2 text-muted">{it.expiry}</td>
+                                    <td className="py-2 text-right font-mono tabular">{formatIDR(it.unitCost)}</td>
+                                    <td
+                                      className={`py-2 text-right font-mono tabular ${
+                                        it.qtyReceived < it.qtyOrdered ? "text-amber" : "text-ink"
+                                      }`}
+                                    >
+                                      {it.qtyReceived}/{it.qtyOrdered}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                            <p className="mt-3 text-xs text-muted">
+                              Diterima melalui{" "}
+                              <Link
+                                to={`/backoffice/receiving?highlight=${receipt.id}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="font-mono font-medium text-pine-dark underline decoration-pine-light/50 underline-offset-2 hover:text-pine"
+                              >
+                                {receipt.id} &middot; {receipt.poNumber}
+                              </Link>{" "}
+                              di Penerimaan barang.
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-xs text-muted">
+                            Tidak ada catatan penerimaan barang yang tertaut untuk faktur ini.
+                          </p>
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -263,8 +345,15 @@ function WriteOffs({ branchId }) {
 
 export default function Finance() {
   const { branchId } = useBranch();
-  const [tab, setTab] = useState("overview");
+  const [searchParams] = useSearchParams();
+  const requestedTab = searchParams.get("tab");
+  const [tab, setTab] = useState(tabs.some((t) => t.value === requestedTab) ? requestedTab : "overview");
+  const highlightId = searchParams.get("highlight");
   const branch = branches.find((b) => b.id === branchId);
+
+  useEffect(() => {
+    if (tabs.some((t) => t.value === requestedTab)) setTab(requestedTab);
+  }, [requestedTab]);
 
   return (
     <div>
@@ -293,7 +382,7 @@ export default function Finance() {
 
       {tab === "overview" && <Overview branchId={branchId} />}
       {tab === "valuation" && <Valuation branchId={branchId} />}
-      {tab === "payables" && <Payables branchId={branchId} />}
+      {tab === "payables" && <Payables branchId={branchId} highlightId={tab === "payables" ? highlightId : null} />}
       {tab === "writeoffs" && <WriteOffs branchId={branchId} />}
     </div>
   );

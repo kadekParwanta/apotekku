@@ -907,6 +907,140 @@ export function getPayablesForBranch(branchId) {
   return branchId === "MAIN" ? payables : [];
 }
 
+export function getPayableById(id) {
+  return payables.find((p) => p.id === id) || null;
+}
+
+// --- Goods receiving (Gudang Utama) -----------------------------------------
+//
+// Receiving happens only at the main warehouse — branches get stock via
+// inter-branch transfer (see `transfers` above), never directly from a
+// supplier. Each goods-receipt note (GRN) is recorded against a supplier PO
+// and captures batch no., expiry date, and cost price per line; a PO can be
+// received across multiple shipments, so each line tracks qty received
+// against qty ordered and the header status rolls up from the lines. A fully
+// received GRN typically has a matching supplier invoice in Finance ->
+// Utang pemasok (see `payables`), linked here via invoiceRef.
+export const goodsReceipts = [
+  {
+    id: "GRN-5518",
+    poNumber: "PO-2026-0917",
+    supplier: "PT Kimia Farma Trading",
+    orderedDate: "2026-09-10",
+    receivedDate: "2026-09-17",
+    status: "received",
+    invoiceRef: "INV-3301",
+    items: [
+      {
+        sku: "PCM-500-10",
+        name: "Paracetamol 500mg",
+        batch: "PCM24-118",
+        expiry: "2027-03-01",
+        unitCost: 4550,
+        qtyOrdered: 6000,
+        qtyReceived: 6000,
+      },
+      {
+        sku: "IBU-400-TAB",
+        name: "Ibuprofen 400mg",
+        batch: "IBU24-133",
+        expiry: "2027-08-09",
+        unitCost: 5350,
+        qtyOrdered: 3000,
+        qtyReceived: 3000,
+      },
+    ],
+  },
+  {
+    id: "GRN-5521",
+    poNumber: "PO-2026-0902",
+    supplier: "PT Enseval Putera Megatrading",
+    orderedDate: "2026-08-28",
+    receivedDate: "2026-09-02",
+    status: "received",
+    invoiceRef: "INV-3298",
+    items: [
+      {
+        sku: "AMX-500-CAP",
+        name: "Amoxicillin 500mg",
+        batch: "AMX24-076",
+        expiry: "2026-11-12",
+        unitCost: 12600,
+        qtyOrdered: 2000,
+        qtyReceived: 2000,
+      },
+    ],
+  },
+  {
+    id: "GRN-5529",
+    poNumber: "PO-2026-0919",
+    supplier: "PT Anugrah Pharmindo Lestari",
+    orderedDate: "2026-09-15",
+    receivedDate: "2026-09-19",
+    status: "partial",
+    invoiceRef: null,
+    items: [
+      {
+        sku: "CTZ-10-TAB",
+        name: "Cetirizine 10mg",
+        batch: "CTZ24-055",
+        expiry: "2027-02-10",
+        unitCost: 6600,
+        qtyOrdered: 1500,
+        qtyReceived: 900,
+      },
+      {
+        sku: "AMOXCLAV-625",
+        name: "Amoxicillin-Clavulanate 625mg",
+        batch: "AMC24-015",
+        expiry: "2027-01-20",
+        unitCost: 26800,
+        qtyOrdered: 600,
+        qtyReceived: 300,
+      },
+    ],
+  },
+  {
+    id: "GRN-5533",
+    poNumber: "PO-2026-0920",
+    supplier: "PT Kimia Farma Trading",
+    orderedDate: "2026-09-18",
+    receivedDate: null,
+    status: "pending",
+    invoiceRef: null,
+    items: [
+      {
+        sku: "SALB-INH",
+        name: "Salbutamol Inhaler 100mcg",
+        batch: "SLB24-030",
+        expiry: "2027-04-15",
+        unitCost: 33500,
+        qtyOrdered: 400,
+        qtyReceived: 0,
+      },
+      {
+        sku: "ORS-SACH",
+        name: "Oral Rehydration Salt",
+        batch: "ORS24-011",
+        expiry: "2027-09-01",
+        unitCost: 1500,
+        qtyOrdered: 3000,
+        qtyReceived: 0,
+      },
+    ],
+  },
+];
+
+// MAIN is the only branch that receives from suppliers; other branches get
+// stock via inter-branch transfer, so they have no GRNs of their own.
+export function getReceiptsForBranch(branchId) {
+  return branchId === "MAIN" ? goodsReceipts : [];
+}
+
+export function getGoodsReceiptByInvoice(invoiceId) {
+  return goodsReceipts.find((r) => r.invoiceRef === invoiceId) || null;
+}
+
 // --- Stock movement log (stock detail page) --------------------------------
 //
 // There's no persisted transaction ledger in this mock app, so the event log

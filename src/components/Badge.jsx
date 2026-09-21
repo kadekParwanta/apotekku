@@ -17,6 +17,9 @@ const styles = {
   "transfer-out": "bg-amber-light text-amber border-amber/30",
   adjustment: "bg-amber-light text-amber border-amber/30",
   "write-off": "bg-brick-light text-brick border-brick/30",
+  pending: "bg-line/40 text-muted border-line",
+  partial: "bg-amber-light text-amber border-amber/30",
+  received: "bg-pine-light/10 text-pine-dark border-pine-light/30",
 };
 
 const labels = {
@@ -38,6 +41,9 @@ const labels = {
   "transfer-out": "Transfer keluar",
   adjustment: "Penyesuaian",
   "write-off": "Write-off",
+  pending: "Menunggu kiriman",
+  partial: "Diterima sebagian",
+  received: "Diterima lengkap",
 };
 
 export default function Badge({ status, children }) {
