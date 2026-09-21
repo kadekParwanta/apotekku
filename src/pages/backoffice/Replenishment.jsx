@@ -48,7 +48,7 @@ export default function Replenishment() {
                 </div>
                 <div className="mt-1.5 text-ink">{r.name}</div>
                 <div className="text-xs text-muted">
-                  {r.sku} \u00b7 {branchName(r.branch)} \u00b7 {r.reason}
+                  {r.sku} · {branchName(r.branch)} · {r.reason}
                 </div>
               </div>
 
@@ -101,7 +101,7 @@ export default function Replenishment() {
                 className="flex items-center justify-between border border-line bg-white px-4 py-2 text-sm"
               >
                 <span className="text-ink">
-                  {r.name} <span className="text-xs text-muted">\u00b7 {branchName(r.branch)}</span>
+                  {r.name} <span className="text-xs text-muted">· {branchName(r.branch)}</span>
                 </span>
                 <span className="text-xs font-medium text-muted">{decisionLabels[decisions[r.id]]}</span>
               </div>

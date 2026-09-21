@@ -54,7 +54,7 @@ export default function Dashboard() {
       <header className="mb-6">
         <h1 className="text-2xl font-semibold text-ink">Ringkasan stok</h1>
         <p className="mt-1 text-sm text-muted">
-          {branch ? branch.name : branchId} \u00b7 per 19 Sep 2026, 09:12
+          {branch ? branch.name : branchId} · per 19 Sep 2026, 09:12
         </p>
       </header>
 
