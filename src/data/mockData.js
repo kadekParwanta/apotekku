@@ -1,3 +1,5 @@
+import vitaminCImage from "../assets/medicines/vitamin-c-1000mg.jpg";
+
 export const branches = [
   { id: "MAIN", name: "Gudang Utama", city: "Denpasar (Pusat)" },
   { id: "BR-01", name: "Cabang Sanur", city: "Sanur" },
@@ -630,16 +632,110 @@ export function getForecastForBranch(branchId) {
   return forecastAtRisk.filter((f) => f.branch === branchId);
 }
 
-// POS catalog for the sale screen
+// POS catalog for the sale screen.
+// genericName/description/dosageInstructions/sideEffects/imageUrl are optional
+// clinical-reference fields (Medicine/Item master, see Requirements.md) shown
+// on the POS grid thumbnail and the Rx-verification screen — not required to
+// dispense, just a visual-ID and quick-reference/counseling aid.
+// imageUrl values are public-domain/CC-licensed stock photos from Wikimedia
+// Commons (generic pill/packet photos, not the actual branded product) —
+// placeholders until real product photography is captured. The Vitamin C
+// entry is a local crop (src/assets/medicines) of a Commons photo that also
+// included peppers in-frame, cropped down to just the tablets.
 export const posCatalog = [
-  { sku: "PCM-500-10", name: "Paracetamol 500mg", form: "Strip isi 10", price: 8500, rx: false, batch: "PCM24-118", stock: 42 },
-  { sku: "AMX-500-CAP", name: "Amoxicillin 500mg", form: "Strip isi 10", price: 22000, rx: true, batch: "AMX24-076", stock: 96 },
-  { sku: "ORS-SACH", name: "Oral Rehydration Salt", form: "Sachet", price: 3000, rx: false, batch: "ORS23-054", stock: 210 },
-  { sku: "CTZ-10-TAB", name: "Cetirizine 10mg", form: "Strip isi 10", price: 12500, rx: false, batch: "CTZ24-041", stock: 18 },
-  { sku: "AMOXCLAV-625", name: "Amoxicillin-Clavulanate 625mg", form: "Strip isi 6", price: 45000, rx: true, batch: "AMC24-009", stock: 30 },
-  { sku: "IBU-400-TAB", name: "Ibuprofen 400mg", form: "Strip isi 10", price: 9500, rx: false, batch: "IBU24-133", stock: 140 },
-  { sku: "SALB-INH", name: "Salbutamol Inhaler 100mcg", form: "Inhaler", price: 68000, rx: true, batch: "SLB24-021", stock: 9 },
-  { sku: "VITC-1000", name: "Vitamin C 1000mg", form: "Strip isi 10", price: 15000, rx: false, batch: "VTC24-090", stock: 88 },
+  {
+    sku: "PCM-500-10",
+    name: "Paracetamol 500mg",
+    form: "Strip isi 10",
+    price: 8500,
+    rx: false,
+    batch: "PCM24-118",
+    stock: 42,
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Paracetamol_acetaminophen_500_mg_pills.jpg",
+  },
+  {
+    sku: "AMX-500-CAP",
+    name: "Amoxicillin 500mg",
+    form: "Strip isi 10",
+    price: 22000,
+    rx: true,
+    batch: "AMX24-076",
+    stock: 96,
+    genericName: "Amoxicillin",
+    description: "Antibiotik golongan penisilin untuk infeksi bakteri saluran napas, THT, dan saluran kemih.",
+    dosageInstructions: "Dewasa: 1 kapsul (500mg) tiap 8 jam, dihabiskan sesuai durasi resep meski gejala membaik.",
+    sideEffects: "Mual, diare, ruam kulit. Hentikan dan cari bantuan medis jika muncul reaksi alergi (bengkak, sesak napas).",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Amoxicillin_500mg_capsules_on_a_plate_%28Sandoz%29.jpg",
+  },
+  {
+    sku: "ORS-SACH",
+    name: "Oral Rehydration Salt",
+    form: "Sachet",
+    price: 3000,
+    rx: false,
+    batch: "ORS23-054",
+    stock: 210,
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Oral_rehydration_salts_%28ORS%29_-_Packet.jpg",
+  },
+  {
+    sku: "CTZ-10-TAB",
+    name: "Cetirizine 10mg",
+    form: "Strip isi 10",
+    price: 12500,
+    rx: false,
+    batch: "CTZ24-041",
+    stock: 18,
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Cetirizine10.JPG",
+  },
+  {
+    sku: "AMOXCLAV-625",
+    name: "Amoxicillin-Clavulanate 625mg",
+    form: "Strip isi 6",
+    price: 45000,
+    rx: true,
+    batch: "AMC24-009",
+    stock: 30,
+    genericName: "Amoxicillin + Asam Klavulanat",
+    description: "Antibiotik spektrum luas untuk infeksi bakteri yang resisten terhadap amoxicillin tunggal.",
+    dosageInstructions: "Dewasa: 1 tablet (625mg) tiap 12 jam, diminum bersama makanan untuk mengurangi gangguan lambung.",
+    sideEffects: "Diare, mual, gangguan pencernaan. Risiko lebih tinggi pada gangguan fungsi hati — tanyakan riwayat pasien.",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/c/c3/Generic_amoxicillin-clavulanic_acid_tablets_with_875mg_amoxicillin.jpg",
+  },
+  {
+    sku: "IBU-400-TAB",
+    name: "Ibuprofen 400mg",
+    form: "Strip isi 10",
+    price: 9500,
+    rx: false,
+    batch: "IBU24-133",
+    stock: 140,
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b0/200mg_ibuprofen_tablets.jpg",
+  },
+  {
+    sku: "SALB-INH",
+    name: "Salbutamol Inhaler 100mcg",
+    form: "Inhaler",
+    price: 68000,
+    rx: true,
+    batch: "SLB24-021",
+    stock: 9,
+    genericName: "Salbutamol (Albuterol)",
+    description: "Bronkodilator kerja cepat untuk meredakan sesak napas pada asma dan PPOK.",
+    dosageInstructions: "1-2 semprotan saat gejala muncul, maks. 8 semprotan/hari. Kocok inhaler sebelum digunakan.",
+    sideEffects: "Jantung berdebar, tremor tangan, sakit kepala ringan — umumnya sementara.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Albuterol_Inhaler.JPG",
+  },
+  {
+    sku: "VITC-1000",
+    name: "Vitamin C 1000mg",
+    form: "Strip isi 10",
+    price: 15000,
+    rx: false,
+    batch: "VTC24-090",
+    stock: 88,
+    imageUrl: vitaminCImage,
+  },
 ];
 
 export const shiftSummary = {

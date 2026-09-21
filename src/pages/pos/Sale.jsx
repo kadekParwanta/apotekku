@@ -109,6 +109,13 @@ export default function Sale() {
               disabled={item.stock === 0}
               className="flex flex-col items-start gap-1 border border-white/10 bg-white/5 px-4 py-3 text-left hover:bg-white/10 disabled:opacity-30"
             >
+              <div className="mb-1 flex h-16 w-full items-center justify-center overflow-hidden rounded bg-white/10">
+                {item.imageUrl ? (
+                  <img src={item.imageUrl} alt={item.name} className="h-full w-full object-contain" loading="lazy" />
+                ) : (
+                  <span className="text-2xl" aria-hidden="true">💊</span>
+                )}
+              </div>
               <div className="flex w-full items-start justify-between gap-2">
                 <span className="text-sm font-medium leading-tight text-white">{item.name}</span>
                 {item.rx && (
@@ -195,6 +202,40 @@ export default function Sale() {
             <p className="mt-1 text-sm text-white/60">
               {verifyItem.name} memerlukan persetujuan resep sebelum dapat ditambahkan ke penjualan.
             </p>
+
+            {(verifyItem.genericName || verifyItem.description || verifyItem.dosageInstructions || verifyItem.sideEffects) && (
+              <div className="mt-4 flex gap-3 border border-white/10 bg-white/5 p-3">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-white/10 text-xl">
+                  {verifyItem.imageUrl ? (
+                    <img src={verifyItem.imageUrl} alt={verifyItem.name} className="h-full w-full rounded object-cover" />
+                  ) : (
+                    <span aria-hidden="true">💊</span>
+                  )}
+                </div>
+                <div className="min-w-0 space-y-1.5 text-xs text-white/70">
+                  {verifyItem.genericName && (
+                    <p>
+                      <span className="text-white/40">Nama generik: </span>
+                      {verifyItem.genericName}
+                    </p>
+                  )}
+                  {verifyItem.description && <p>{verifyItem.description}</p>}
+                  {verifyItem.dosageInstructions && (
+                    <p>
+                      <span className="text-white/40">Dosis: </span>
+                      {verifyItem.dosageInstructions}
+                    </p>
+                  )}
+                  {verifyItem.sideEffects && (
+                    <p>
+                      <span className="text-white/40">Efek samping: </span>
+                      {verifyItem.sideEffects}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
             <label className="mt-4 block text-xs text-white/50" htmlFor="pin">
               PIN apoteker
             </label>
